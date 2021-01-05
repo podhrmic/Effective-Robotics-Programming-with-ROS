@@ -37,3 +37,74 @@ Chapter 1 does not have code files.
 
 ###Suggestions and Feedback
 [Click here] ( https://docs.google.com/forms/d/e/1FAIpQLSe5qwunkGf6PUvzPirPDtuy1Du5Rlzew23UBp2S-P3wB-GcwQ/viewform ) if you have any feedback or suggestions.
+
+## Notes
+* The book says "use kinetic" but should work with [Noetic](https://wiki.ros.org/ROS/Installation)
+* Follow [Ubuntu installation instructions](https://wiki.ros.org/noetic/Installation/Ubuntu)
+* You can run ROS in docker, even with some X11 applications - see https://tuw-cpsg.github.io/tutorials/docker-ros/
+* ORB SLAM 2 - possibly a cool ROS library: https://wiki.ros.org/orb_slam2_ros
+* Book code: https://github.com/PacktPublishing/Effective-Robotics-Programming-with-ROS
+
+Additional packages needed:
+```
+sudo apt-get install python3-rosinstall python3-rosdep
+sudo apt-get install python-yaml
+# To fix some bugs on Ubuntu 20.04
+# From https://answers.ros.org/question/39657/importerror-no-module-named-rospkg/?answer=363168#post-id-363168
+sudo apt install python-is-python3
+# These two packages are for gazebo, installed by default
+# sudo apt-get install ros-noetic-gazebo-ros ros-noetic-gazebo-ros-control
+# For nanosleep.c - gazebo was throwing error otherwise?
+sudo apt install glibc-source
+# For robot navigation
+sudo apt-get install ros-kinetic-teleop-twist-keyboard
+# For fake localization for the Chapter 4 demo
+sudo apt-get install ros-noetic-fake-localization ros-noetic-map-server
+# For move base msgs
+sudo apt install ros-noetic-move-base-msgs ros-noetic-amcl ros-noetic-move-base
+```
+
+Creating a workspace:
+```
+mkdir –p ~/dev/catkin_ws/src
+cd ~/dev/catkin_ws/src
+catkin_init_workspace
+```
+
+Building a package:
+```
+# Creates package
+catkin_create_pkg chapter2_tutorials std_msgs roscpp
+# Build package
+catkin_make
+# To install it, from catkin_ws$
+source devel/setup.sh
+```
+
+```
+# Chapter 4L Incorrect apostrophes around the launch command
+roslaunch robot1_gazebo gazebo.launch model:="`rospack find robot1_description`/urdf/robot1_base_03.xacro"
+```
+
+To get gazebo with a robot and then sensors (camera/laser):
+```
+# gazebo (might take a while to start)
+roslaunch robot1_gazebo gazebo_wg.launch
+# Rviz for visualization
+# if you are adding a camera/laser make sure to choose appropriate frame of reference
+roslaunch rviz rviz
+# For keyboard control of the robot
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+```
+
+```
+$ roslaunch chapter5_tutorials gazebo_xacro.launch model:="`rospack find chapter5_tutorials`/urdf/robot1_base_04.xacro"
+# includes rviz and a map
+$ roslaunch chapter5_tutorials gazebo_mapping_robot.launch model:="`rospack find chapter5_tutorials`/urdf/robot1_base_04.xacro"
+$ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+```
+
+### Visual Odometry
+
+* Repo: https://github.com/HKUST-Aerial-Robotics/VINS-Fusion
+* Dataset: https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets

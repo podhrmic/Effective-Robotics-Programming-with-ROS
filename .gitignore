@@ -45,3 +45,9 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+# Package build artifacts
+*/.catkin_workspace
+*/build
+*/devel
